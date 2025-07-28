@@ -2,88 +2,126 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Design Law Blog | НИУ ВШЭ</title>
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,500&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="Проект LAW DESIGN + ROBOTS исследует правовые аспекты искусственного интеллекта в дизайне">
+    <meta name="keywords" content="ИИ, искусственный интеллект, право, дизайн, авторское право, нейроискусство, LDR">
+    <meta name="theme-color" content="#121418">
+    <title>LAW DESIGN + ROBOTS | НИУ ВШЭ</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,500&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" as="style">
+    <link rel="preload" href="styles.css" as="style">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,500&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Favicons -->
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
 </head>
 <body>
     <div class="blog-container">
         <!-- Left Menu -->
-        <div class="blog-menu-section">
+        <nav class="blog-menu-section" aria-label="Основное меню">
             <a href="https://vifirsanova.github.io/tutorial/" class="blog-menu">Туториалы</a>
             <a href="#" class="blog-menu">Блог</a>
             <a href="#" class="blog-menu">Контакты</a>
-            <a href="#" class="blog-menu mention">@AI_Design_Law</a>
             <a href="#" class="blog-menu subscribe">Подписаться</a>
-        </div>
-
-        <!-- Sticky Header -->
-        <div class="sticky-header">
+        </nav>
+        <header class="sticky-header">
             <div class="sticky-content">
-                <div class="blog-big-title">AI</div>
-                <div class="pinned-issue rounded">Избранное</div>
-                <div class="authors-info">
-                    <h2>Авторы проекта</h2>
-                    <div class="author-name">Фирсанова Виктория Игоревна</div>
-                    <div class="author-title">Преподаватель: НИУ ВШЭ в Санкт-Петербурге</div>
-                    
-                    <div class="author-name">Ароян Мариам Юрьевна</div>
-                    <div class="author-title">Приглашенный преподаватель: НИУ ВШЭ в Санкт-Петербурге</div>
-                </div>
-            </div>
-            <div class="section-header">
-                <h2>Мнения экспертов</h2>
-                <p>Что специалисты говорят о правовых аспектах ИИ в дизайне</p>
-            </div>
-            
-            <div class="opinions-grid">
-                <div class="opinion-card">
-                    <div class="opinion-card__img">
-                        <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Expert 1">
-                    </div>
-                    <div class="opinion-card__content">
-                        <h3>Анна Петрова</h3>
-                        <p class="affiliation">Доцент кафедры цифрового права, МГУ</p>
-                        <blockquote>"Современное законодательство не успевает за развитием генеративного ИИ. Нам нужны новые правовые категории для регулирования авторства AI-контента."</blockquote>
-                    </div>
-                </div>
-                
-                <div class="opinion-card">
-                    <div class="opinion-card__img">
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Expert 2">
-                    </div>
-                    <div class="opinion-card__content">
-                        <h3>Иван Смирнов</h3>
-                        <p class="affiliation">Генеральный директор AI Design Studio</p>
-                        <blockquote>"В нашей студии мы разработали внутренние стандарты использования ИИ, которые защищают и клиентов, и дизайнеров. Такие практики должны стать отраслевыми."</blockquote>
-                    </div>
-                </div>
-                
-                <div class="opinion-card">
-                    <div class="opinion-card__img">
-                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Expert 3">
-                    </div>
-                    <div class="opinion-card__content">
-                        <h3>Елена Козлова</h3>
-                        <p class="affiliation">Искусствовед, куратор цифрового искусства</p>
-                        <blockquote>"Нейроискусство - это не просто инструмент, а принципиально новая форма творчества, требующая переосмысления традиционных эстетических категорий."</blockquote>
-                    </div>
-                </div>
-            </div>
-        </div>
+                <h1 class="blog-big-title">LAW DESIGN + ROBOTS</h1>
 
-        <!-- Main Content -->
-        <div class="blog-slider">
+                <div class="feedback-section">
+                    <h3 class="feedback-title">Присоединиться к проекту</h3>
+                    
+                    <div class="feedback-content">
+                        <p><strong>Проект LAW DESIGN + ROBOTS будет рад обратной связи и предложениям от студентов и преподавателей Вышки.</strong> Если вы хотите предложить материал для публикации или организовать мероприятие в рамках LDR, то вы можете рассказать о своей идее главным редакторам.</p>
+                        
+                        <p>Вы можете написать любому из редакторов, всем редакторам сразу или же одному из редакторов в зависимости от темы:</p>
+                        
+			<div class="contact-cards-container">
+                        <div class="editor-contacts">
+                            <div class="contact-card black-card">
+                                <div class="contact-header">PRO ROBOTS</div>
+                                <div class="contact-name">Виктория Фирсанова</div>
+				<div class="editor-title">Преподаватель: НИУ ВШЭ в Санкт-Петербурге</div>
+                                <a href="mailto:v.firsanova@hse.ru" class="contact-email">vfirsanova@hse.ru</a>
+                            </div>
+                            
+                            <div class="contact-card black-card">
+                                <div class="contact-header">PRO LAW</div>
+                                <div class="contact-name">Мариам Ароян</div>
+				<div class="editor-title">Приглашенный преподаватель: НИУ ВШЭ в Санкт-Петербурге</div>
+                                <a href="mailto:m.aroian@hse.ru" class="contact-email">m.aroian@hse.ru</a>
+                            </div>
+                        </div>
+			</div>
+                        
+                        <p class="feedback-note"><strong>Решения о публикации</strong> предложенного материала или проведении совместных мероприятий зависят от контент-стратегии проекта в конкретное время, поэтому мы очень просим вас отнестись к этому вопросу с пониманием и не расстраиваться, если вашу статью не взяли в блог.</p>
+                    </div>
+                </div>
+
+            <section class="expert-opinions" aria-labelledby="expert-opinions-heading">
+                <div class="section-header">
+                    <h2 id="expert-opinions-heading">Мнения экспертов</h2>
+                    <p>Что специалисты говорят о правовых аспектах ИИ в дизайне</p>
+                </div>
+                
+                <div class="opinions-grid">
+                    <article class="opinion-card">
+                        <div class="opinion-card__img">
+                            <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Портрет Анны Петровой" width="60" height="60" loading="lazy">
+                        </div>
+                        <div class="opinion-card__content">
+                            <h3>Анна Петрова</h3>
+                            <p class="affiliation">Доцент кафедры цифрового права, МГУ</p>
+                            <blockquote>"Современное законодательство не успевает за развитием генеративного ИИ. Нам нужны новые правовые категории для регулирования авторства AI-контента."</blockquote>
+                        </div>
+                    </article>
+                    
+                    <article class="opinion-card">
+                        <div class="opinion-card__img">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Портрет Ивана Смирнова" width="60" height="60" loading="lazy">
+                        </div>
+                        <div class="opinion-card__content">
+                            <h3>Иван Смирнов</h3>
+                            <p class="affiliation">Генеральный директор AI Design Studio</p>
+                            <blockquote>"В нашей студии мы разработали внутренние стандарты использования ИИ, которые защищают и клиентов, и дизайнеров. Такие практики должны стать отраслевыми."</blockquote>
+                        </div>
+                    </article>
+                    
+                    <article class="opinion-card">
+                        <div class="opinion-card__img">
+                            <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Портрет Елены Козловой" width="60" height="60" loading="lazy">
+                        </div>
+                        <div class="opinion-card__content">
+                            <h3>Елена Козлова</h3>
+                            <p class="affiliation">Искусствовед, куратор цифрового искусства</p>
+                            <blockquote>"Нейроискусство - это не просто инструмент, а принципиально новая форма творчества, требующая переосмысления традиционных эстетических категорий."</blockquote>
+                        </div>
+                    </article>
+                </div>
+            </section>
+        </header>
+
+        <main class="blog-slider">
             <div class="blog-slider__wrp">
-                <div class="blog-slider__item">
+                <article class="blog-slider__item">
                     <div class="blog-slider__img">
-                        <img src="https://www.oecd.org/adobe/dynamicmedia/deliver/dm-aid--24a672cf-ffb2-451a-b6dd-11771bb93b08/shutterstock-2204212039.jpg?quality=80&preferwebp=true" alt="AI Technology">
+                        <img src="https://www.if24.ru/wp-content/uploads/2018/07/1-2.jpg"
+                             alt="Искусственный интеллект и творчество" 
+                             width="800" 
+                             height="400"
+                             loading="lazy">
                     </div>
                     <div class="blog-slider__content">
-                        <span class="blog-slider__date">15 июля 2025</span>
+                        <time class="blog-slider__date" datetime="2025-07-15">15 июля 2025</time>
                         <h2 class="blog-slider__title">Промпт-инжиниринг - это <span>искусство?</span></h2>
                         <div class="blog-detail">
                             <span>Виктория Фирсанова</span>
@@ -93,22 +131,26 @@
                             <p>Взгляд со стороны авторского права на процесс создания промптов для генеративного ИИ и их правовой статус.</p>
                             <p>Промпт-инжиниринг сегодня часто называют «новой грамотой цифровой эпохи» или даже искусством общения с машиной. Это навык, на первый взгляд сугубо технический — ведь речь идёт всего лишь о том, чтобы «правильно» задать вопрос искусственному интеллекту. Но чем глубже мы погружаемся в мир генеративных моделей, тем яснее становится: хороший промпт — это не просто команда. Это элемент творчества, построенный на знании языка, культуры, визуальных и литературных кодов. Возникает вопрос: можно ли рассматривать такие промпты как результат творческого труда? И если да, заслуживают ли они защиты авторским правом?</p>
                         </div>
-                        <a href="#" class="blog-slider__readmore">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-corner-down-right" viewBox="0 0 24 24">
+                        <a href="#" class="blog-slider__readmore" aria-label="Читать статью 'Промпт-инжиниринг - это искусство?'">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-corner-down-right" viewBox="0 0 24 24" aria-hidden="true">
                                 <path d="M15 10l5 5-5 5" />
                                 <path d="M4 4v7a4 4 0 004 4h12" />
                             </svg>
                             Читать далее
                         </a>
                     </div>
-                </div>
+                </article>
 
-                <div class="blog-slider__item">
+                <article class="blog-slider__item">
                     <div class="blog-slider__img">
-                        <img src="https://www.microsoft.com/en-us/research/wp-content/uploads/2018/12/systems.png" alt="Art and Design">
+                        <img src="https://www.microsoft.com/en-us/research/wp-content/uploads/2018/12/systems.png" 
+                             alt="Нейроискусство и технологии" 
+                             width="800" 
+                             height="400"
+                             loading="lazy">
                     </div>
                     <div class="blog-slider__content">
-                        <span class="blog-slider__date">22 июля 2025</span>
+                        <time class="blog-slider__date" datetime="2025-07-22">22 июля 2025</time>
                         <h2 class="blog-slider__title">Нейроискусство: <span>новый жанр</span></h2>
                         <div class="blog-detail">
                             <span>Мариам Ароян</span>
@@ -119,22 +161,26 @@
                             <p>Ответ не так однозначен. Промпт может быть просто командой — «сделай красиво». А может — самостоятельным творческим высказыванием, в котором отражаются стиль, вкус и интенция автора. И пока закон не предлагает чётких ответов, вопрос остаётся открытым для дискуссии — как среди юристов, так и среди самих создателей промптов.</p>
                             <p>Промпт-инжиниринг — это не просто инструмент взаимодействия с ИИ. Это новая форма креативности на стыке языка, технологий и визуального мышления. И, возможно, в будущем мы увидим отдельную категорию правовой охраны — не только для результатов генерации, но и для того, что лежит в их основе: человеческой идеи, выраженной в словах.</p>
                         </div>
-                        <a href="#" class="blog-slider__readmore">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-corner-down-right" viewBox="0 0 24 24">
+                        <a href="#" class="blog-slider__readmore" aria-label="Читать статью 'Нейроискусство: новый жанр'">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-corner-down-right" viewBox="0 0 24 24" aria-hidden="true">
                                 <path d="M15 10l5 5-5 5" />
                                 <path d="M4 4v7a4 4 0 004 4h12" />
                             </svg>
                             Читать далее
                         </a>
                     </div>
-                </div>
+                </article>
 
-                <div class="blog-slider__item">
+                <article class="blog-slider__item">
                     <div class="blog-slider__img">
-                        <img src="https://www.e-spincorp.com/wp-content/uploads/2018/01/Quantum-Computing-Chip-1024x576.jpg" alt="Law">
+                        <img src="https://www.e-spincorp.com/wp-content/uploads/2018/01/Quantum-Computing-Chip-1024x576.jpg" 
+                             alt="Технологии искусственного интеллекта" 
+                             width="800" 
+                             height="400"
+                             loading="lazy">
                     </div>
                     <div class="blog-slider__content">
-                        <span class="blog-slider__date">30 июля 2025</span>
+                        <time class="blog-slider__date" datetime="2025-07-30">30 июля 2025</time>
                         <h2 class="blog-slider__title">Авторство в <span>эпоху ИИ</span></h2>
                         <div class="blog-detail">
                             <span>Виктория Фирсанова</span>
@@ -143,26 +189,28 @@
                         <div class="blog-slider__text">
                             <p>Может ли искусственный интеллект быть признан автором произведения с точки зрения современного права.</p>
                             <p>Для получения охраны произведение должно соответствовать трём основным критериям:</p>
-                            <p>1. Оригинальность — то есть быть результатом индивидуального, творческого выбора;</p>
-                            <p>2. Выраженность в объективной форме — его можно зафиксировать (на бумаге, в файле и т.д.);</p>
-                            <p>3. Человеческое авторство — произведение должно быть создано человеком (по крайней мере на сегодняшний день именно такова позиция большинства правопорядков).</p>
+                            <ol>
+                                <li>Оригинальность — то есть быть результатом индивидуального, творческого выбора;</li>
+                                <li>Выраженность в объективной форме — его можно зафиксировать (на бумаге, в файле и т.д.);</li>
+                                <li>Человеческое авторство — произведение должно быть создано человеком (по крайней мере на сегодняшний день именно такова позиция большинства правопорядков).</li>
+                            </ol>
                         </div>
-                        <a href="#" class="blog-slider__readmore">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-corner-down-right" viewBox="0 0 24 24">
+                        <a href="#" class="blog-slider__readmore" aria-label="Читать статью 'Авторство в эпоху ИИ'">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-corner-down-right" viewBox="0 0 24 24" aria-hidden="true">
                                 <path d="M15 10l5 5-5 5" />
                                 <path d="M4 4v7a4 4 0 004 4h12" />
                             </svg>
                             Читать далее
                         </a>
                     </div>
-                </div>
+                </article>
             </div>
-        </div>
+        </main>
 
         <!-- Featured Articles -->
-        <div class="featured-articles">
+        <aside class="featured-articles" aria-labelledby="featured-articles-heading">
             <div class="marquee-container">
-                <div class="marquee">
+                <div class="marquee" aria-hidden="true">
                     <span>ИИ меняет представления о творчестве и авторстве</span>
                     <span>Новые правовые вызовы в эпоху генеративного ИИ</span>
                     <span>НИУ ВШЭ запускает исследовательский проект по праву ИИ</span>
@@ -174,44 +222,52 @@
             </div>
 
             <div class="featured-title-container">
-                <div class="featured-title">Избранные статьи</div>
+                <h2 id="featured-articles-heading" class="featured-title">Избранные статьи</h2>
                 <div class="rounded"><a href="#Header">Все статьи</a></div>
             </div>
 
-            <div class="featured-article">
-                <div class="article-number">1</div>
-                <div class="article-title">Промпт-инжиниринг как искусство</div>
-                <div class="article-subtitle">Взгляд со стороны авторского права на процесс создания промптов для генеративного ИИ и их правовой статус.</div>
-            </div>
+            <article class="featured-article">
+                <div class="article-number" aria-hidden="true">1</div>
+                <div class="article-content">
+                    <h3 class="article-title">Промпт-инжиниринг как искусство</h3>
+                    <p class="article-subtitle">Взгляд со стороны авторского права на процесс создания промптов для генеративного ИИ и их правовой статус.</p>
+                </div>
+            </article>
 
-            <div class="featured-article">
-                <div class="article-number">2</div>
-                <div class="article-title">Нейроискусство и право</div>
-                <div class="article-subtitle">Как ИИ меняет представления о творческом процессе в визуальном искусстве и дизайне.</div>
-            </div>
+            <article class="featured-article">
+                <div class="article-number" aria-hidden="true">2</div>
+                <div class="article-content">
+                    <h3 class="article-title">Нейроискусство и право</h3>
+                    <p class="article-subtitle">Как ИИ меняет представления о творческом процессе в визуальном искусстве и дизайне.</p>
+                </div>
+            </article>
 
-            <div class="featured-article">
-                <div class="article-number">3</div>
-                <div class="article-title">Авторство в цифровую эпоху</div>
-                <div class="article-subtitle">Может ли искусственный интеллект быть признан автором произведения с точки зрения современного права.</div>
-            </div>
+            <article class="featured-article">
+                <div class="article-number" aria-hidden="true">3</div>
+                <div class="article-content">
+                    <h3 class="article-title">Авторство в цифровую эпоху</h3>
+                    <p class="article-subtitle">Может ли искусственный интеллект быть признан автором произведения с точки зрения современного права.</p>
+                </div>
+            </article>
 
-            <div class="featured-article">
-                <div class="article-number">4</div>
-                <div class="article-title">Этика генеративного ИИ</div>
-                <div class="article-subtitle">Правовые и этические аспекты использования искусственного интеллекта в творческих профессиях.</div>
-            </div>
+            <article class="featured-article">
+                <div class="article-number" aria-hidden="true">4</div>
+                <div class="article-content">
+                    <h3 class="article-title">Этика генеративного ИИ</h3>
+                    <p class="article-subtitle">Правовые и этические аспекты использования искусственного интеллекта в творческих профессиях.</p>
+                </div>
+            </article>
 
-            <a href="#" class="circle">
-                <div class="circle-title">ИИ и Право</div>
+            <a href="#" class="circle" aria-label="Узнать больше о проекте ИИ и Право">
+                <div class="circle-title">LAW DESIGN + ROBOTS</div>
                 <div class="circle-subtitle">Междисциплинарный исследовательский проект НИУ ВШЭ</div>
                 <div class="circle-footer">Узнать больше</div>
             </a>
-        </div>
+        </aside>
     </div>
 
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
-    <script src="script.js"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js" defer></script>
+    <script src="script.js" defer></script>
 </body>
 </html>
