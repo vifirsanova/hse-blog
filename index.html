@@ -13,8 +13,6 @@
     <link rel="preload" href="styles.css" as="style">
     
     <!-- CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,500&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="styles.css">
     
@@ -26,13 +24,15 @@
 </head>
 <body>
     <div class="blog-container">
-        <!-- Left Menu -->
-        <nav class="blog-menu-section" aria-label="Основное меню">
+        <!-- Menu Section -->
+        <nav class="blog-menu-section desktop-only" aria-label="Основное меню">
             <a href="https://vifirsanova.github.io/tutorial/" class="blog-menu">Туториалы</a>
             <a href="#" class="blog-menu">Блог</a>
             <a href="#" class="blog-menu">Контакты</a>
             <a href="#" class="blog-menu subscribe">Подписаться</a>
         </nav>
+
+        <!-- Sticky Header Section -->
         <header class="sticky-header">
             <div class="sticky-content">
                 <h1 class="blog-big-title">LAW DESIGN + ROBOTS</h1>
@@ -45,27 +45,28 @@
                         
                         <p>Вы можете написать любому из редакторов, всем редакторам сразу или же одному из редакторов в зависимости от темы:</p>
                         
-			<div class="contact-cards-container">
-                        <div class="editor-contacts">
-                            <div class="contact-card black-card">
-                                <div class="contact-header">PRO ROBOTS</div>
-                                <div class="contact-name">Виктория Фирсанова</div>
-				<div class="editor-title">Преподаватель: НИУ ВШЭ в Санкт-Петербурге</div>
-                                <a href="mailto:v.firsanova@hse.ru" class="contact-email">vfirsanova@hse.ru</a>
-                            </div>
-                            
-                            <div class="contact-card black-card">
-                                <div class="contact-header">PRO LAW</div>
-                                <div class="contact-name">Мариам Ароян</div>
-				<div class="editor-title">Приглашенный преподаватель: НИУ ВШЭ в Санкт-Петербурге</div>
-                                <a href="mailto:m.aroian@hse.ru" class="contact-email">m.aroian@hse.ru</a>
+                        <div class="contact-cards-container">
+                            <div class="editor-contacts">
+                                <div class="contact-card black-card">
+                                    <div class="contact-header">PRO ROBOTS</div>
+                                    <div class="contact-name">Виктория Фирсанова</div>
+                                    <div class="editor-title">Преподаватель: НИУ ВШЭ в Санкт-Петербурге</div>
+                                    <a href="mailto:v.firsanova@hse.ru" class="contact-email">vfirsanova@hse.ru</a>
+                                </div>
+                                
+                                <div class="contact-card black-card">
+                                    <div class="contact-header">PRO LAW</div>
+                                    <div class="contact-name">Мариам Ароян</div>
+                                    <div class="editor-title">Приглашенный преподаватель: НИУ ВШЭ в Санкт-Петербурге</div>
+                                    <a href="mailto:m.aroian@hse.ru" class="contact-email">m.aroian@hse.ru</a>
+                                </div>
                             </div>
                         </div>
-			</div>
                         
                         <p class="feedback-note"><strong>Решения о публикации</strong> предложенного материала или проведении совместных мероприятий зависят от контент-стратегии проекта в конкретное время, поэтому мы очень просим вас отнестись к этому вопросу с пониманием и не расстраиваться, если вашу статью не взяли в блог.</p>
                     </div>
                 </div>
+            </div>
 
             <section class="expert-opinions" aria-labelledby="expert-opinions-heading">
                 <div class="section-header">
@@ -110,6 +111,7 @@
             </section>
         </header>
 
+        <!-- Blog Slider Section -->
         <main class="blog-slider">
             <div class="blog-slider__wrp">
                 <article class="blog-slider__item">
@@ -159,7 +161,7 @@
                         <div class="blog-slider__text">
                             <p>Как ИИ меняет представления о творческом процессе в визуальном искусстве и дизайне.</p>
                             <p>Ответ не так однозначен. Промпт может быть просто командой — «сделай красиво». А может — самостоятельным творческим высказыванием, в котором отражаются стиль, вкус и интенция автора. И пока закон не предлагает чётких ответов, вопрос остаётся открытым для дискуссии — как среди юристов, так и среди самих создателей промптов.</p>
-                            <p>Промпт-инжиниринг — это не просто инструмент взаимодействия с ИИ. Это новая форма креативности на стыке языка, технологий и визуального мышления. И, возможно, в будущем мы увидим отдельную категорию правовой охраны — не только для результатов генерации, но и для того, что лежит в их основе: человеческой идеи, выраженной в словах.</p>
+                            <p>Промпт-инжиниринг — это не просто инструмент взаимодействия с ИИ. Это новая форма креативности на стыке языка, технологий и визуального мышления. И, возможно, в будущем мы увидим отдельную категорию правовой охраны — не только для результатов генерации, но и для того, что лежит в их основе: человеческой идеи, выраженной в словай.</p>
                         </div>
                         <a href="#" class="blog-slider__readmore" aria-label="Читать статью 'Нейроискусство: новый жанр'">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-corner-down-right" viewBox="0 0 24 24" aria-hidden="true">
@@ -207,7 +209,7 @@
             </div>
         </main>
 
-        <!-- Featured Articles -->
+        <!-- Featured Articles Section -->
         <aside class="featured-articles" aria-labelledby="featured-articles-heading">
             <div class="marquee-container">
                 <div class="marquee" aria-hidden="true">
@@ -222,23 +224,22 @@
             </div>
 
             <div class="featured-title-container">
-                <h2 id="featured-articles-heading" class="featured-title">Избранные статьи</h2>
-                <div class="rounded"><a href="#Header">Все статьи</a></div>
+                <h2 id="featured-articles-heading" class="featured-title">Узнать больше..</h2>
             </div>
 
             <article class="featured-article">
                 <div class="article-number" aria-hidden="true">1</div>
                 <div class="article-content">
-                    <h3 class="article-title">Промпт-инжиниринг как искусство</h3>
-                    <p class="article-subtitle">Взгляд со стороны авторского права на процесс создания промптов для генеративного ИИ и их правовой статус.</p>
+                    <h3 class="article-title">Промпт-инжиниринг</h3>
+                    <p class="article-subtitle">Как научиться создавать промпты эффективно и решать абсолютные любые задачи за секунды. <a href="#prompt-engineering" class="read-more">Узнать больше..</a></p>
                 </div>
             </article>
 
             <article class="featured-article">
                 <div class="article-number" aria-hidden="true">2</div>
                 <div class="article-content">
-                    <h3 class="article-title">Нейроискусство и право</h3>
-                    <p class="article-subtitle">Как ИИ меняет представления о творческом процессе в визуальном искусстве и дизайне.</p>
+                    <h3 class="article-title">Нейросети и право</h3>
+                    <p class="article-subtitle">Подборка ресурсов о вопросах права в искусственном интеллекте: авторское право в эпоху цифрового творчества и интернет-законодательство. <a href="#ai-law" class="read-more">Узнать больше..</a></p>
                 </div>
             </article>
 
@@ -246,15 +247,15 @@
                 <div class="article-number" aria-hidden="true">3</div>
                 <div class="article-content">
                     <h3 class="article-title">Авторство в цифровую эпоху</h3>
-                    <p class="article-subtitle">Может ли искусственный интеллект быть признан автором произведения с точки зрения современного права.</p>
+                    <p class="article-subtitle">Как развитие генеративного искусственного интеллекта влияет на развитие творческих индустрий. <a href="#digital-authorship" class="read-more">Узнать больше..</a></p>
                 </div>
             </article>
 
             <article class="featured-article">
                 <div class="article-number" aria-hidden="true">4</div>
                 <div class="article-content">
-                    <h3 class="article-title">Этика генеративного ИИ</h3>
-                    <p class="article-subtitle">Правовые и этические аспекты использования искусственного интеллекта в творческих профессиях.</p>
+                    <h3 class="article-title">Под капотом</h3>
+                    <p class="article-subtitle">Материалы для профессиональных разработчиков систем искусственного интеллекта. <a href="#under-the-hood" class="read-more">Узнать больше..</a></p>
                 </div>
             </article>
 
@@ -264,10 +265,11 @@
                 <div class="circle-footer">Узнать больше</div>
             </a>
         </aside>
+
+        <!-- Article Detail View (hidden by default) -->
+        <div id="article-detail" style="display: none;"></div>
     </div>
 
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js" defer></script>
     <script src="script.js" defer></script>
 </body>
 </html>
