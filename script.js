@@ -206,24 +206,25 @@ function showArticle(articleId) {
             section.style.display = 'none';
         });
     } else {
-        // Mobile behavior - transition
-        if (domElements.mainContent) {
-            domElements.mainContent.classList.remove('visible');
-            domElements.mainContent.classList.add('hidden');
-        }
+        // Mobile behavior - full screen takeover
+        document.body.classList.add('article-open');
+        domElements.container.classList.add('hidden');
         
         domElements.articleDetail.style.display = 'block';
         domElements.articleDetail.classList.remove('hidden');
         domElements.articleDetail.classList.add('visible');
         domElements.articleDetail.innerHTML = articleTemplates[articleId];
+        
+        // Scroll to top immediately
+        window.scrollTo(0, 0);
     }
     
     history.pushState({ article: articleId }, '', `#${articleId}`);
-    window.scrollTo(0, 0);
     domElements.articleDetail.focus();
     initInteractiveElements();
 }
 
+// In the showArticleList function, add these lines:
 function showArticleList() {
     if (appState.isDesktop) {
         // Desktop behavior - show all sections
@@ -232,11 +233,9 @@ function showArticleList() {
         });
         domElements.articleDetail.style.display = 'none';
     } else {
-        // Mobile behavior - transition
-        if (domElements.mainContent) {
-            domElements.mainContent.classList.remove('hidden');
-            domElements.mainContent.classList.add('visible');
-        }
+        // Mobile behavior - transition back
+        document.body.classList.remove('article-open');
+        domElements.container.classList.remove('hidden');
         
         domElements.articleDetail.classList.remove('visible');
         domElements.articleDetail.classList.add('hidden');
@@ -305,10 +304,12 @@ function initInteractiveElements() {
         });
     });
     
-    // Handle read more links - FIXED for mobile
+    // Handle read more links in featured articles
     document.querySelectorAll('.read-more').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
+            e.stopPropagation(); // Prevent any parent event handlers
+            
             const href = link.getAttribute('href');
             if (href && href.startsWith('#')) {
                 const articleId = href.substring(1);
@@ -321,9 +322,23 @@ function initInteractiveElements() {
     document.querySelectorAll('.blog-slider__readmore').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
-            // You might want to add actual article IDs to these links
-            // For now, let's show the first article as an example
-            showArticle('prompt-engineering');
+            e.stopPropagation(); // Prevent any parent event handlers
+            
+            // Extract article ID from the parent article if available
+            const articleItem = link.closest('.blog-slider__item');
+            if (articleItem && articleItem.dataset.articleId) {
+                showArticle(articleItem.dataset.articleId);
+            } else {
+                // Fallback to first article
+                showArticle('prompt-engineering');
+            }
+        });
+    });
+    
+    // Prevent any default behavior on featured articles
+    document.querySelectorAll('.featured-article').forEach(article => {
+        article.addEventListener('click', (e) => {
+            e.preventDefault();
         });
     });
 }

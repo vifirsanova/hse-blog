@@ -126,6 +126,8 @@ a {
     flex-direction: column;
     overflow-y: auto;
     height: 100vh;
+    position: relative;
+    transition: transform 0.3s ease;
 }
 
 .blog-menu-section,
@@ -817,7 +819,20 @@ img[loading="lazy"].loaded {
 /* Mobile adjustments for article detail */
 @media screen and (max-width: 1199px) {
     #article-detail {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 100vh !important;
+        width: 100vw !important;
+        z-index: 9000;
         padding: 1.5rem;
+        background: var(--light-bg);
+        overflow-y: auto;
+        display: none;
+        margin: 0;
+        transform: none;
     }
     
     #article-detail h2 {
@@ -826,6 +841,25 @@ img[loading="lazy"].loaded {
     
     #article-detail h3 {
         font-size: 1.25rem;
+    }
+
+    /* Prevent body scrolling when article detail is open */
+    body.article-open {
+        overflow: hidden;
+        height: 100vh;
+        position: fixed;
+        width: 100%;
+    }
+    
+    /* Ensure main content is hidden when article is open */
+    .main-content.hidden {
+        display: none;
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .blog-container.hidden {
+        display: none;
     }
 }
 
