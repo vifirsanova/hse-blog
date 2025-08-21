@@ -20,8 +20,7 @@ const appState = {
     isMenuOpen: false,
     isDesktop: window.innerWidth >= 1200,
     currentArticle: null,
-    scrollListeners: null,
-    isHorizontalScrollEnabled: false
+    scrollPosition: 0
 };
 
 // Article templates
@@ -172,13 +171,9 @@ function enableDesktopLayout() {
         section.style.overflowY = 'auto';
         section.style.overflowX = 'hidden';
     });
-    
-    appState.isHorizontalScrollEnabled = false;
 }
 
 function disableDesktopLayout() {
-    if (!appState.isHorizontalScrollEnabled) return;
-    
     // Reset styles for mobile
     domElements.container.style.overflowX = 'hidden';
     domElements.container.style.overflowY = 'auto';
@@ -187,14 +182,15 @@ function disableDesktopLayout() {
         section.style.overflowY = 'visible';
         section.style.overflowX = 'hidden';
     });
-    
-    appState.isHorizontalScrollEnabled = false;
 }
 
 function showArticle(articleId) {
     if (!articleTemplates[articleId]) return;
     
     appState.currentArticle = articleId;
+    
+    // Save current scroll position
+    appState.scrollPosition = window.scrollY || document.documentElement.scrollTop;
     
     if (appState.isDesktop) {
         // Desktop behavior - show in place
@@ -206,25 +202,22 @@ function showArticle(articleId) {
             section.style.display = 'none';
         });
     } else {
-        // Mobile behavior - full screen takeover
+        // Mobile behavior - show overlay without changing scroll position
         document.body.classList.add('article-open');
-        domElements.container.classList.add('hidden');
+        document.body.style.overflow = 'hidden';
         
         domElements.articleDetail.style.display = 'block';
-        domElements.articleDetail.classList.remove('hidden');
         domElements.articleDetail.classList.add('visible');
         domElements.articleDetail.innerHTML = articleTemplates[articleId];
         
-        // Scroll to top immediately
-        window.scrollTo(0, 0);
+        // Scroll to top of article detail
+        domElements.articleDetail.scrollTop = 0;
     }
     
-    history.pushState({ article: articleId }, '', `#${articleId}`);
-    domElements.articleDetail.focus();
+    // Reinitialize interactive elements for the new content
     initInteractiveElements();
 }
 
-// In the showArticleList function, add these lines:
 function showArticleList() {
     if (appState.isDesktop) {
         // Desktop behavior - show all sections
@@ -233,21 +226,23 @@ function showArticleList() {
         });
         domElements.articleDetail.style.display = 'none';
     } else {
-        // Mobile behavior - transition back
+        // Mobile behavior - hide article detail
         document.body.classList.remove('article-open');
-        domElements.container.classList.remove('hidden');
+        document.body.style.overflow = '';
         
         domElements.articleDetail.classList.remove('visible');
-        domElements.articleDetail.classList.add('hidden');
         
+        // Wait a moment before hiding to allow any transitions
         setTimeout(() => {
             domElements.articleDetail.style.display = 'none';
-        }, 300);
+            
+            // Restore scroll position
+            if (appState.scrollPosition) {
+                window.scrollTo(0, appState.scrollPosition);
+            }
+        }, 10);
     }
     
-    history.pushState({}, '', window.location.pathname);
-    window.scrollTo(0, 0);
-    document.body.focus();
     appState.currentArticle = null;
 }
 
@@ -297,18 +292,19 @@ function handleResize() {
 
 function initInteractiveElements() {
     // Handle back button in article detail
-    document.querySelectorAll('.back-button').forEach(button => {
-        button.addEventListener('click', (e) => {
+    const backButton = document.querySelector('.back-button');
+    if (backButton) {
+        backButton.addEventListener('click', (e) => {
             e.preventDefault();
             showArticleList();
         });
-    });
+    }
     
     // Handle read more links in featured articles
     document.querySelectorAll('.read-more').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
-            e.stopPropagation(); // Prevent any parent event handlers
+            e.stopPropagation();
             
             const href = link.getAttribute('href');
             if (href && href.startsWith('#')) {
@@ -318,11 +314,11 @@ function initInteractiveElements() {
         });
     });
     
-    // Also handle the main article read more links
+    // Handle the main article read more links
     document.querySelectorAll('.blog-slider__readmore').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
-            e.stopPropagation(); // Prevent any parent event handlers
+            e.stopPropagation();
             
             // Extract article ID from the parent article if available
             const articleItem = link.closest('.blog-slider__item');
@@ -365,24 +361,6 @@ function init() {
     
     // Initialize interactive elements
     initInteractiveElements();
-    
-    // Handle initial URL state
-    if (window.location.hash) {
-        const articleId = window.location.hash.substring(1);
-        showArticle(articleId);
-    }
-    
-    // Event listeners
-    window.addEventListener('resize', debounce(handleResize, 100));
-    window.addEventListener('orientationchange', () => setTimeout(handleResize, 300));
-    window.addEventListener('popstate', () => {
-        if (window.location.hash) {
-            const articleId = window.location.hash.substring(1);
-            showArticle(articleId);
-        } else {
-            showArticleList();
-        }
-    });
 }
 
 // Initialize when DOM is ready

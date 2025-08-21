@@ -833,6 +833,7 @@ img[loading="lazy"].loaded {
         display: none;
         margin: 0;
         transform: none;
+        transform: translateY(0) !important;
     }
     
     #article-detail h2 {
