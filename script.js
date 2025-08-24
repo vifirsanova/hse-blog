@@ -23,21 +23,177 @@ const appState = {
     scrollPosition: 0
 };
 
-let articleTemplates = {};
+let siteContent = {};
 
-async function loadArticlesFromJSON() {
+async function loadContentFromJSON() {
     try {
-        const response = await fetch('https://raw.githubusercontent.com/vifirsanova/hse-blog/refs/heads/main/assets/content.json');
+        const response = await fetch('https://raw.githubusercontent.com/vifirsanova/hse-blog/refs/heads/main/assets/preview.json');
         if (!response.ok) {
-            throw new Error('Failed to load articles');
+            throw new Error('Failed to load content');
         }
-        articleTemplates = await response.json();
-        console.log('Articles loaded successfully');
+        siteContent = await response.json();
+        console.log('Content loaded successfully');
+        
+        // Render the content after loading
+        renderExpertOpinions();
+        renderBlogSlider();
+        renderFeaturedArticles();
     } catch (error) {
-        console.error('Error loading articles:', error);
+        console.error('Error loading content:', error);
         // Fallback to empty object if loading fails
-        articleTemplates = {};
+        siteContent = {};
     }
+}
+
+function renderExpertOpinions() {
+    if (!siteContent.expertOpinions || !domElements.stickyHeader) return;
+    
+    const opinionsSection = domElements.stickyHeader.querySelector('.expert-opinions');
+    if (!opinionsSection) return;
+    
+    const { heading, subheading, opinions } = siteContent.expertOpinions;
+    
+    // Update section header
+    const sectionHeader = opinionsSection.querySelector('.section-header');
+    if (sectionHeader) {
+        const headingElement = sectionHeader.querySelector('h2');
+        const subheadingElement = sectionHeader.querySelector('p');
+        
+        if (headingElement) headingElement.textContent = heading;
+        if (subheadingElement) subheadingElement.textContent = subheading;
+    }
+    
+    // Render opinion cards
+    const opinionsGrid = opinionsSection.querySelector('.opinions-grid');
+    if (opinionsGrid) {
+        opinionsGrid.innerHTML = ''; // Clear existing content
+        
+        opinions.forEach(opinion => {
+            const opinionCard = document.createElement('article');
+            opinionCard.className = 'opinion-card';
+            opinionCard.innerHTML = `
+                <div class="opinion-card__img">
+                    <img src="${opinion.image}" alt="${opinion.alt}" width="60" height="60" loading="lazy">
+                </div>
+                <div class="opinion-card__content">
+                    <h3>${opinion.name}</h3>
+                    <p class="affiliation">${opinion.affiliation}</p>
+                    <blockquote>${opinion.quote}</blockquote>
+                </div>
+            `;
+            opinionsGrid.appendChild(opinionCard);
+        });
+    }
+}
+
+function renderBlogSlider() {
+    if (!siteContent.blogSlider || !domElements.blogSlider) return;
+    
+    const sliderWrp = domElements.blogSlider.querySelector('.blog-slider__wrp');
+    if (!sliderWrp) return;
+    
+    sliderWrp.innerHTML = ''; // Clear existing content
+    
+    siteContent.blogSlider.forEach(article => {
+        const articleElement = document.createElement('article');
+        articleElement.className = 'blog-slider__item';
+        articleElement.setAttribute('data-article-id', article.id);
+        
+        articleElement.innerHTML = `
+            <div class="blog-slider__img">
+                <img src="${article.image}" alt="${article.alt}" width="800" height="400" loading="lazy">
+            </div>
+            <div class="blog-slider__content">
+                <time class="blog-slider__date" datetime="${article.date}">${formatDate(article.date)}</time>
+                <h2 class="blog-slider__title">${article.title}</h2>
+                <div class="blog-detail">
+                    <span>${article.author}</span>
+                    <span>${article.readTime}</span>
+                </div>
+                <div class="blog-slider__text">
+                    <p>${article.excerpt}</p>
+                </div>
+                <a href="#${article.id}" class="blog-slider__readmore" aria-label="Читать статью '${article.title.replace(/<[^>]*>/g, '')}'" data-article-id="${article.id}">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-corner-down-right" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M15 10l5 5-5 5" />
+                        <path d="M4 4v7a4 4 0 004 4h12" />
+                    </svg>
+                    Читать далее
+                </a>
+            </div>
+        `;
+        
+        sliderWrp.appendChild(articleElement);
+    });
+}
+
+function renderFeaturedArticles() {
+    if (!siteContent.featuredArticles || !domElements.featuredArticles) return;
+    
+    const { marquee, heading, articles, circle } = siteContent.featuredArticles;
+    
+    // Update marquee
+    const marqueeContainer = domElements.featuredArticles.querySelector('.marquee-container');
+    if (marqueeContainer) {
+        const marqueeElement = marqueeContainer.querySelector('.marquee');
+        if (marqueeElement) {
+            let marqueeHTML = '';
+            // Add items twice for seamless looping
+            [...marquee, ...marquee].forEach(text => {
+                marqueeHTML += `<span>${text}</span>`;
+            });
+            marqueeElement.innerHTML = marqueeHTML;
+        }
+    }
+    
+    // Update heading
+    const featuredTitle = domElements.featuredArticles.querySelector('.featured-title');
+    if (featuredTitle) {
+        featuredTitle.textContent = heading;
+    }
+    
+    // Render articles
+    const articlesContainer = domElements.featuredArticles;
+    // Find where to insert articles (after featured-title-container)
+    const titleContainer = articlesContainer.querySelector('.featured-title-container');
+    const existingArticles = articlesContainer.querySelectorAll('.featured-article');
+    
+    // Remove existing articles
+    existingArticles.forEach(article => article.remove());
+    
+    // Add new articles
+    articles.forEach(article => {
+        const articleElement = document.createElement('article');
+        articleElement.className = 'featured-article';
+        articleElement.innerHTML = `
+            <div class="article-number" aria-hidden="true">${article.number}</div>
+            <div class="article-content">
+                <h3 class="article-title">${article.title}</h3>
+                <p class="article-subtitle">${article.subtitle} <a href="${article.link}" class="read-more">Узнать больше..</a></p>
+            </div>
+        `;
+        
+        // Insert after title container
+        titleContainer.parentNode.insertBefore(articleElement, titleContainer.nextSibling);
+    });
+    
+    // Update circle element
+    const circleElement = domElements.featuredArticles.querySelector('.circle');
+    if (circleElement) {
+        const circleTitle = circleElement.querySelector('.circle-title');
+        const circleSubtitle = circleElement.querySelector('.circle-subtitle');
+        const circleFooter = circleElement.querySelector('.circle-footer');
+        
+        if (circleTitle) circleTitle.textContent = circle.title;
+        if (circleSubtitle) circleSubtitle.textContent = circle.subtitle;
+        if (circleFooter) circleFooter.textContent = circle.footer;
+    }
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    return date.toLocaleDateString('ru-RU', options);
 }
 
 function initMobileMenu() {
@@ -143,41 +299,76 @@ function disableDesktopLayout() {
 }
 
 function showArticle(articleId) {
-    if (!articleTemplates[articleId]) {
+    // First check if it's a featured article
+    if (siteContent.featuredArticles?.content?.[articleId]) {
+        // Handle featured article content
+        appState.currentArticle = articleId;
+        appState.scrollPosition = window.scrollY || document.documentElement.scrollTop;
+        
+        if (appState.isDesktop) {
+            domElements.articleDetail.style.display = 'block';
+            domElements.articleDetail.innerHTML = siteContent.featuredArticles.content[articleId];
+            
+            domElements.blogSections.forEach(section => {
+                section.style.display = 'none';
+            });
+        } else {
+            document.body.classList.add('article-open');
+            document.body.style.overflow = 'hidden';
+            
+            domElements.articleDetail.style.display = 'block';
+            domElements.articleDetail.classList.add('visible');
+            domElements.articleDetail.innerHTML = siteContent.featuredArticles.content[articleId];
+            
+            domElements.articleDetail.scrollTop = 0;
+        }
+        
+        initInteractiveElements();
+        return;
+    }
+    
+    // Handle regular blog articles
+    const article = siteContent.blogSlider?.find(a => a.id === articleId);
+    if (!article) {
         console.error('Article not found:', articleId);
         return;
     }
     
-    // Rest of the function remains the same...
     appState.currentArticle = articleId;
-    
-    // Save current scroll position
     appState.scrollPosition = window.scrollY || document.documentElement.scrollTop;
     
     if (appState.isDesktop) {
-        // Desktop behavior - show in place
         domElements.articleDetail.style.display = 'block';
-        domElements.articleDetail.innerHTML = articleTemplates[articleId];
+        domElements.articleDetail.innerHTML = generateArticleHTML(article);
         
-        // Hide other sections
         domElements.blogSections.forEach(section => {
             section.style.display = 'none';
         });
     } else {
-        // Mobile behavior - show overlay without changing scroll position
         document.body.classList.add('article-open');
         document.body.style.overflow = 'hidden';
         
         domElements.articleDetail.style.display = 'block';
         domElements.articleDetail.classList.add('visible');
-        domElements.articleDetail.innerHTML = articleTemplates[articleId];
+        domElements.articleDetail.innerHTML = generateArticleHTML(article);
         
-        // Scroll to top of article detail
         domElements.articleDetail.scrollTop = 0;
     }
     
-    // Reinitialize interactive elements for the new content
     initInteractiveElements();
+}
+
+function generateArticleHTML(article) {
+    return `
+        <a href="#" class="back-button">← Назад к статьям</a>
+        <time datetime="${article.date}">${formatDate(article.date)}</time>
+        <h2>${article.title.replace(/<span>/g, '').replace(/<\/span>/g, '')}</h2>
+        <div class="blog-detail">
+            <span>${article.author}</span>
+            <span>${article.readTime}</span>
+        </div>
+        ${article.content}
+    `;
 }
 
 function showArticleList() {
@@ -284,11 +475,8 @@ function initInteractiveElements() {
             
             // Extract article ID from the data attribute
             const articleId = link.getAttribute('data-article-id');
-            if (articleId && articleTemplates[articleId]) {
+            if (articleId) {
                 showArticle(articleId);
-            } else {
-                // Fallback to first article
-                showArticle('prompt-engineering');
             }
         });
     });
@@ -314,8 +502,8 @@ function debounce(func, wait) {
 }
 
 async function init() {
-    // Load articles from JSON first
-    await loadArticlesFromJSON();
+    // Load content from JSON first
+    await loadContentFromJSON();
     
     // Set initial layout mode
     if (appState.isDesktop) {
@@ -326,6 +514,9 @@ async function init() {
     
     // Initialize interactive elements
     initInteractiveElements();
+    
+    // Add resize handler
+    window.addEventListener('resize', debounce(handleResize, 250));
 }
 
 // Initialize when DOM is ready
