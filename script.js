@@ -23,52 +23,111 @@ const appState = {
     scrollPosition: 0
 };
 
-let siteContent = {};
+class ContentManager {
+    constructor() {
+        this.content = {};
+        this.articles = new Map();
+        this.isLoaded = false;
+    }
 
-async function loadContentFromJSON() {
-    try {
-        const response = await fetch('https://raw.githubusercontent.com/vifirsanova/hse-blog/refs/heads/main/assets/preview.json');
-        if (!response.ok) {
-            throw new Error('Failed to load content');
-        }
-        siteContent = await response.json();
-        console.log('Content loaded successfully');
+    async load() {
+        if (this.isLoaded) return true;
         
-        // Render the content after loading
-        renderExpertOpinions();
-        renderBlogSlider();
-        renderFeaturedArticles();
-    } catch (error) {
-        console.error('Error loading content:', error);
-        // Fallback to empty object if loading fails
-        siteContent = {};
+        try {
+            const response = await fetch('https://raw.githubusercontent.com/vifirsanova/hse-blog/refs/heads/main/assets/preview.json');
+            if (!response.ok) throw new Error('Failed to load content');
+            
+            this.content = await response.json();
+            this.processContent();
+            this.isLoaded = true;
+            
+            console.log('Content loaded and processed successfully');
+            return true;
+        } catch (error) {
+            console.error('Error loading content:', error);
+            return false;
+        }
+    }
+
+    processContent() {
+        // Обрабатываем статьи из блога
+        if (this.content.blogSlider) {
+            this.content.blogSlider.forEach(article => {
+                this.articles.set(article.id, {
+                    type: 'blog',
+                    data: article
+                });
+            });
+        }
+
+        // Обрабатываем экспертные мнения
+        if (this.content.expertOpinions?.opinions) {
+            this.content.expertOpinions.opinions.forEach(opinion => {
+                const id = `expert-${opinion.name.toLowerCase().replace(/\s+/g, '-')}`;
+                this.articles.set(id, {
+                    type: 'expert',
+                    data: opinion
+                });
+            });
+        }
+
+        // Обрабатываем избранные статьи
+        if (this.content.featuredArticles?.articles) {
+            this.content.featuredArticles.articles.forEach(article => {
+                const id = article.link.substring(1); // Убираем # из ссылки
+                if (!this.articles.has(id)) {
+                    this.articles.set(id, {
+                        type: 'featured',
+                        data: article
+                    });
+                }
+            });
+        }
+    }
+
+    getArticle(id) {
+        return this.articles.get(id);
+    }
+
+    getBlogArticles() {
+        return this.content.blogSlider || [];
+    }
+
+    getExpertOpinions() {
+        return this.content.expertOpinions || {};
+    }
+
+    getFeaturedArticles() {
+        return this.content.featuredArticles || {};
     }
 }
 
+// Глобальный экземпляр менеджера контента
+const contentManager = new ContentManager();
+
 function renderExpertOpinions() {
-    if (!siteContent.expertOpinions || !domElements.stickyHeader) return;
+    const expertOpinions = contentManager.getExpertOpinions();
+    if (!expertOpinions.heading || !domElements.stickyHeader) return;
     
     const opinionsSection = domElements.stickyHeader.querySelector('.expert-opinions');
     if (!opinionsSection) return;
     
-    const { heading, subheading, opinions } = siteContent.expertOpinions;
-    
-    // Update section header
+    // Обновляем заголовок секции
     const sectionHeader = opinionsSection.querySelector('.section-header');
     if (sectionHeader) {
         const headingElement = sectionHeader.querySelector('h2');
         const subheadingElement = sectionHeader.querySelector('p');
         
-        if (headingElement) headingElement.textContent = heading;
-        if (subheadingElement) subheadingElement.textContent = subheading;
+        if (headingElement) headingElement.textContent = expertOpinions.heading;
+        if (subheadingElement) subheadingElement.textContent = expertOpinions.subheading;
     }
     
-    // Render opinion cards
+    // Рендерим карточки мнений
     const opinionsGrid = opinionsSection.querySelector('.opinions-grid');
-    if (opinionsGrid) {
-        opinionsGrid.innerHTML = ''; // Clear existing content
+    if (opinionsGrid && expertOpinions.opinions) {
+        opinionsGrid.innerHTML = '';
         
-        opinions.forEach(opinion => {
+        expertOpinions.opinions.forEach(opinion => {
             const opinionCard = document.createElement('article');
             opinionCard.className = 'opinion-card';
             opinionCard.innerHTML = `
@@ -87,32 +146,38 @@ function renderExpertOpinions() {
 }
 
 function renderBlogSlider() {
-    if (!siteContent.blogSlider || !domElements.blogSlider) return;
+    const blogArticles = contentManager.getBlogArticles();
+    if (!blogArticles.length || !domElements.blogSlider) return;
     
     const sliderWrp = domElements.blogSlider.querySelector('.blog-slider__wrp');
     if (!sliderWrp) return;
     
-    sliderWrp.innerHTML = ''; // Clear existing content
+    sliderWrp.innerHTML = ''; // Очищаем существующий контент
     
-    siteContent.blogSlider.forEach(article => {
+    blogArticles.forEach(article => {
         const articleElement = document.createElement('article');
         articleElement.className = 'blog-slider__item';
         articleElement.setAttribute('data-article-id', article.id);
         
         articleElement.innerHTML = `
-            <div class="blog-slider__img">
-                <img src="${article.image}" alt="${article.alt}" width="800" height="400" loading="lazy">
-            </div>
             <div class="blog-slider__content">
                 <time class="blog-slider__date" datetime="${article.date}">${formatDate(article.date)}</time>
                 <h2 class="blog-slider__title">${article.title}</h2>
+                
+                <div class="blog-slider__img">
+                    <img src="${article.image}" alt="${article.alt}" width="800" height="400" loading="lazy" 
+                         style="width: 100%; height: auto; border-radius: 12px; margin: 16px 0; filter: grayscale(1);">
+                </div>
+                
                 <div class="blog-detail">
-                    <span>${article.author}</span>
+                    <span>${article.author}</span> · 
                     <span>${article.readTime}</span>
                 </div>
-                <div class="blog-slider__text">
-                    <p>${article.excerpt}</p>
+                
+                <div class="blog-slider__text" style="line-height: 1.6; margin: 16px 0; color: #161419;">
+                    ${article.excerpt}
                 </div>
+                
                 <a href="#${article.id}" class="blog-slider__readmore" aria-label="Читать статью '${article.title.replace(/<[^>]*>/g, '')}'" data-article-id="${article.id}">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-corner-down-right" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M15 10l5 5-5 5" />
@@ -128,17 +193,18 @@ function renderBlogSlider() {
 }
 
 function renderFeaturedArticles() {
-    if (!siteContent.featuredArticles || !domElements.featuredArticles) return;
+    const featuredArticles = contentManager.getFeaturedArticles();
+    if (!featuredArticles || !domElements.featuredArticles) return;
     
-    const { marquee, heading, articles, circle } = siteContent.featuredArticles;
+    const { marquee, heading, articles, circle } = featuredArticles;
     
-    // Update marquee
+    // Обновляем бегущую строку
     const marqueeContainer = domElements.featuredArticles.querySelector('.marquee-container');
     if (marqueeContainer) {
         const marqueeElement = marqueeContainer.querySelector('.marquee');
         if (marqueeElement) {
             let marqueeHTML = '';
-            // Add items twice for seamless looping
+            // Добавляем элементы дважды для бесшовного цикла
             [...marquee, ...marquee].forEach(text => {
                 marqueeHTML += `<span>${text}</span>`;
             });
@@ -146,40 +212,44 @@ function renderFeaturedArticles() {
         }
     }
     
-    // Update heading
+    // Обновляем заголовок
     const featuredTitle = domElements.featuredArticles.querySelector('.featured-title');
     if (featuredTitle) {
         featuredTitle.textContent = heading;
     }
     
-    // Render articles
+    // Рендерим статьи
     const articlesContainer = domElements.featuredArticles;
-    // Find where to insert articles (after featured-title-container)
+    // Находим, куда вставлять статьи (после featured-title-container)
     const titleContainer = articlesContainer.querySelector('.featured-title-container');
     const existingArticles = articlesContainer.querySelectorAll('.featured-article');
     
-    // Remove existing articles
+    // Удаляем существующие статьи
     existingArticles.forEach(article => article.remove());
     
-    // Add new articles
-    articles.forEach(article => {
-        const articleElement = document.createElement('article');
-        articleElement.className = 'featured-article';
-        articleElement.innerHTML = `
-            <div class="article-number" aria-hidden="true">${article.number}</div>
-            <div class="article-content">
-                <h3 class="article-title">${article.title}</h3>
-                <p class="article-subtitle">${article.subtitle} <a href="${article.link}" class="read-more">Узнать больше..</a></p>
-            </div>
-        `;
-        
-        // Insert after title container
-        titleContainer.parentNode.insertBefore(articleElement, titleContainer.nextSibling);
-    });
+    // Добавляем новые статьи
+    if (articles) {
+        articles.forEach(article => {
+            const articleElement = document.createElement('article');
+            articleElement.className = 'featured-article';
+            articleElement.setAttribute('data-article-id', article.link.substring(1));
+            
+            articleElement.innerHTML = `
+                <div class="article-number" aria-hidden="true">${article.number}</div>
+                <div class="article-content">
+                    <h3 class="article-title">${article.title}</h3>
+                    <p class="article-subtitle">${article.subtitle} <a href="${article.link}" class="read-more">Узнать больше..</a></p>
+                </div>
+            `;
+            
+            // Вставляем после контейнера с заголовком
+            titleContainer.parentNode.insertBefore(articleElement, titleContainer.nextSibling);
+        });
+    }
     
-    // Update circle element
+    // Обновляем элемент circle
     const circleElement = domElements.featuredArticles.querySelector('.circle');
-    if (circleElement) {
+    if (circleElement && circle) {
         const circleTitle = circleElement.querySelector('.circle-title');
         const circleSubtitle = circleElement.querySelector('.circle-subtitle');
         const circleFooter = circleElement.querySelector('.circle-footer');
@@ -299,36 +369,7 @@ function disableDesktopLayout() {
 }
 
 function showArticle(articleId) {
-    // First check if it's a featured article
-    if (siteContent.featuredArticles?.content?.[articleId]) {
-        // Handle featured article content
-        appState.currentArticle = articleId;
-        appState.scrollPosition = window.scrollY || document.documentElement.scrollTop;
-        
-        if (appState.isDesktop) {
-            domElements.articleDetail.style.display = 'block';
-            domElements.articleDetail.innerHTML = siteContent.featuredArticles.content[articleId];
-            
-            domElements.blogSections.forEach(section => {
-                section.style.display = 'none';
-            });
-        } else {
-            document.body.classList.add('article-open');
-            document.body.style.overflow = 'hidden';
-            
-            domElements.articleDetail.style.display = 'block';
-            domElements.articleDetail.classList.add('visible');
-            domElements.articleDetail.innerHTML = siteContent.featuredArticles.content[articleId];
-            
-            domElements.articleDetail.scrollTop = 0;
-        }
-        
-        initInteractiveElements();
-        return;
-    }
-    
-    // Handle regular blog articles
-    const article = siteContent.blogSlider?.find(a => a.id === articleId);
+    const article = contentManager.getArticle(articleId);
     if (!article) {
         console.error('Article not found:', articleId);
         return;
@@ -359,16 +400,71 @@ function showArticle(articleId) {
 }
 
 function generateArticleHTML(article) {
-    return `
-        <a href="#" class="back-button">← Назад к статьям</a>
-        <time datetime="${article.date}">${formatDate(article.date)}</time>
-        <h2>${article.title.replace(/<span>/g, '').replace(/<\/span>/g, '')}</h2>
-        <div class="blog-detail">
-            <span>${article.author}</span>
-            <span>${article.readTime}</span>
-        </div>
-        ${article.content}
-    `;
+    let html = '';
+    
+    switch(article.type) {
+        case 'blog':
+            html = `
+                <div style="max-width: 800px; margin: 0 auto;">
+                    <a href="#" class="back-button">← Назад к статьям</a>
+                    <time datetime="${article.data.date}" style="display: block; margin: 1rem 0; color: #666; font-size: 0.9rem;">${formatDate(article.data.date)}</time>
+                    <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; margin-bottom: 1.5rem; line-height: 1.2;">${article.data.title.replace(/<span>/g, '').replace(/<\/span>/g, '')}</h2>
+                    
+                    <div style="margin: 1.5rem 0;">
+                        <img src="${article.data.image}" alt="${article.data.alt}" style="width: 100%; height: auto; border-radius: 12px; filter: grayscale(1);">
+                    </div>
+                    
+                    <div class="blog-detail" style="display: flex; gap: 1rem; margin: 1rem 0; color: #666; font-size: 0.9rem;">
+                        <span>${article.data.author}</span> · 
+                        <span>${article.data.readTime}</span>
+                    </div>
+                    
+                    <div style="line-height: 1.7; font-size: 1.1rem;">
+		    	<span>${article.data.excerpt}</span>
+                        <span>${article.data.content}</span>
+                    </div>
+                </div>
+            `;
+            break;
+            
+        case 'featured':
+            html = `
+                <div style="max-width: 800px; margin: 0 auto;">
+                    <a href="#" class="back-button">← Назад к статьям</a>
+                    <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; margin-bottom: 1.5rem;">${article.data.title}</h2>
+                    <div class="blog-detail" style="display: flex; gap: 1rem; margin: 1rem 0; color: #666; font-size: 0.9rem;">
+                        <span>Избранная статья</span>
+                    </div>
+                    <div style="line-height: 1.7; font-size: 1.1rem;">
+                        ${article.data.content || `<p>${article.data.subtitle}</p>`}
+                    </div>
+                </div>
+            `;
+            break;
+            
+        case 'expert':
+            html = `
+                <div style="max-width: 800px; margin: 0 auto;">
+                    <a href="#" class="back-button">← Назад к статьям</a>
+                    <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 2rem; margin-bottom: 1rem;">Мнение эксперта: ${article.data.name}</h2>
+                    <div class="blog-detail" style="display: flex; gap: 1rem; margin: 1rem 0; color: #666; font-size: 0.9rem;">
+                        <span>${article.data.affiliation}</span>
+                    </div>
+                    <blockquote style="border-left: 4px solid #121418; padding-left: 1rem; margin: 1.5rem 0; font-style: italic; font-size: 1.2rem; line-height: 1.6;">
+                        ${article.data.quote}
+                    </blockquote>
+                    <div class="expert-image" style="text-align: center; margin: 2rem 0;">
+                        <img src="${article.data.image}" alt="${article.data.alt}" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover;">
+                    </div>
+                </div>
+            `;
+            break;
+            
+        default:
+            html = `<p>Контент не найден</p><a href="#" class="back-button">← Назад к статьям</a>`;
+    }
+    
+    return html;
 }
 
 function showArticleList() {
@@ -444,7 +540,7 @@ function handleResize() {
 }
 
 function initInteractiveElements() {
-    // Handle back button in article detail
+    // Обрабатываем кнопку "Назад" в деталях статьи
     const backButton = document.querySelector('.back-button');
     if (backButton) {
         backButton.addEventListener('click', (e) => {
@@ -453,7 +549,7 @@ function initInteractiveElements() {
         });
     }
     
-    // Handle read more links in featured articles
+    // Обрабатываем ссылки "Узнать больше" в избранных статьях
     document.querySelectorAll('.read-more').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
@@ -467,13 +563,13 @@ function initInteractiveElements() {
         });
     });
     
-    // Handle the main article read more links
+    // Обрабатываем основные ссылки "Читать далее"
     document.querySelectorAll('.blog-slider__readmore').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
             
-            // Extract article ID from the data attribute
+            // Извлекаем ID статьи из data-атрибута
             const articleId = link.getAttribute('data-article-id');
             if (articleId) {
                 showArticle(articleId);
@@ -481,10 +577,14 @@ function initInteractiveElements() {
         });
     });
     
-    // Prevent any default behavior on featured articles
+    // Обрабатываем клики по избранным статьям
     document.querySelectorAll('.featured-article').forEach(article => {
         article.addEventListener('click', (e) => {
             e.preventDefault();
+            const articleId = article.getAttribute('data-article-id');
+            if (articleId) {
+                showArticle(articleId);
+            }
         });
     });
 }
@@ -502,20 +602,31 @@ function debounce(func, wait) {
 }
 
 async function init() {
-    // Load content from JSON first
-    await loadContentFromJSON();
+    // Загружаем контент через менеджер
+    const success = await contentManager.load();
     
-    // Set initial layout mode
+    if (!success) {
+        // Показываем сообщение об ошибке или используем fallback
+        console.error('Не удалось загрузить контент');
+        return;
+    }
+    
+    // Рендерим контент
+    renderExpertOpinions();
+    renderBlogSlider();
+    renderFeaturedArticles();
+    
+    // Устанавливаем начальный режим layout
     if (appState.isDesktop) {
         enableDesktopLayout();
     } else {
         initMobileMenu();
     }
     
-    // Initialize interactive elements
+    // Инициализируем интерактивные элементы
     initInteractiveElements();
     
-    // Add resize handler
+    // Добавляем обработчик изменения размера
     window.addEventListener('resize', debounce(handleResize, 250));
 }
 
