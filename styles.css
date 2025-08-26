@@ -152,8 +152,8 @@ a {
 
 .contact-card {
     width: 100%;
-    padding: 25px;
-    border-radius: 8px;
+    padding: 20px;
+    border-radius: 10px;
     transition: transform 0.3s ease;
     display: flex;
     flex-direction: column;
@@ -178,21 +178,22 @@ a {
     display: flex;
     flex-direction: column;
     padding: 0;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
 }
 
 .blog-slider__img {
     width: 100%;
-    height: 260px;
-    margin-bottom: 20px;
+    height: auto;
+    margin-bottom: 16px;
     filter: grayscale(1);
     position: relative;
     overflow: hidden;
+    border-radius: 20px;
 }
 
 .blog-slider__img img {
     width: 100%;
-    height: 100%;
+    height: auto;
     object-fit: cover;
 }
 
@@ -238,7 +239,7 @@ a {
     font-size: 26px;
     font-weight: 500;
     line-height: 1.2;
-    margin: 8px 0;
+    margin: 6px 0;
     color: var(--title-color);
 }
 
@@ -951,7 +952,7 @@ img[loading="lazy"].loaded {
     
     .sticky-header {
         grid-column: 2;
-        padding: 40px;
+        padding: 20px;
         border-right: 1px solid var(--border-color);
         height: 100vh;
         overflow-y: auto;
@@ -959,7 +960,7 @@ img[loading="lazy"].loaded {
     
     .blog-slider {
         grid-column: 3;
-        padding: 40px;
+        padding: 25px;
         border-right: 1px solid var(--border-color);
         height: 100vh;
         overflow-y: auto;
@@ -967,7 +968,7 @@ img[loading="lazy"].loaded {
     
     .featured-articles {
         grid-column: 4;
-        padding: 40px;
+        padding: 25px;
         height: 100vh;
         overflow-y: auto;
     }
