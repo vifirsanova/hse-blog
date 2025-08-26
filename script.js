@@ -49,11 +49,22 @@ class ContentManager {
         }
     }
 
+    // Метод для генерации ID из заголовка
+    generateArticleId(id) {
+        return id
+            .toLowerCase()
+            .substring(0, 50);
+    }
+
     processContent() {
         // Обрабатываем статьи из блога
         if (this.content.blogSlider) {
             this.content.blogSlider.forEach(article => {
-                this.articles.set(article.id, {
+                const articleId = this.generateArticleId(article.id);
+                article.id = articleId;
+                article.link = `#${articleId}`;
+                
+                this.articles.set(articleId, {
                     type: 'blog',
                     data: article
                 });
@@ -63,7 +74,10 @@ class ContentManager {
         // Обрабатываем экспертные мнения
         if (this.content.expertOpinions?.opinions) {
             this.content.expertOpinions.opinions.forEach(opinion => {
-                const id = `expert-${opinion.name.toLowerCase().replace(/\s+/g, '-')}`;
+                const id = this.generateArticleId(`expert-${opinion.name}`);
+                opinion.id = id;
+                opinion.link = `#${id}`;
+                
                 this.articles.set(id, {
                     type: 'expert',
                     data: opinion
@@ -74,9 +88,12 @@ class ContentManager {
         // Обрабатываем избранные статьи
         if (this.content.featuredArticles?.articles) {
             this.content.featuredArticles.articles.forEach(article => {
-                const id = article.link.substring(1); // Убираем # из ссылки
-                if (!this.articles.has(id)) {
-                    this.articles.set(id, {
+                const articleId = this.generateArticleId(article.title);
+                article.id = articleId;
+                article.link = `#${articleId}`;
+                
+                if (!this.articles.has(articleId)) {
+                    this.articles.set(articleId, {
                         type: 'featured',
                         data: article
                     });
@@ -152,7 +169,7 @@ function renderBlogSlider() {
     const sliderWrp = domElements.blogSlider.querySelector('.blog-slider__wrp');
     if (!sliderWrp) return;
     
-    sliderWrp.innerHTML = ''; // Очищаем существующий контент
+    sliderWrp.innerHTML = '';
     
     blogArticles.forEach(article => {
         const articleElement = document.createElement('article');
@@ -178,7 +195,7 @@ function renderBlogSlider() {
                     ${article.excerpt}
                 </div>
                 
-                <a href="#${article.id}" class="blog-slider__readmore" aria-label="Читать статью '${article.title.replace(/<[^>]*>/g, '')}'" data-article-id="${article.id}">
+                <a href="${article.link}" class="blog-slider__readmore" aria-label="Читать статью '${article.title.replace(/<[^>]*>/g, '')}'" data-article-id="${article.id}">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-corner-down-right" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M15 10l5 5-5 5" />
                         <path d="M4 4v7a4 4 0 004 4h12" />
@@ -204,7 +221,6 @@ function renderFeaturedArticles() {
         const marqueeElement = marqueeContainer.querySelector('.marquee');
         if (marqueeElement) {
             let marqueeHTML = '';
-            // Добавляем элементы дважды для бесшовного цикла
             [...marquee, ...marquee].forEach(text => {
                 marqueeHTML += `<span>${text}</span>`;
             });
@@ -220,19 +236,16 @@ function renderFeaturedArticles() {
     
     // Рендерим статьи
     const articlesContainer = domElements.featuredArticles;
-    // Находим, куда вставлять статьи (после featured-title-container)
     const titleContainer = articlesContainer.querySelector('.featured-title-container');
     const existingArticles = articlesContainer.querySelectorAll('.featured-article');
     
-    // Удаляем существующие статьи
     existingArticles.forEach(article => article.remove());
     
-    // Добавляем новые статьи
     if (articles) {
         articles.forEach(article => {
             const articleElement = document.createElement('article');
             articleElement.className = 'featured-article';
-            articleElement.setAttribute('data-article-id', article.link.substring(1));
+            articleElement.setAttribute('data-article-id', article.id);
             
             articleElement.innerHTML = `
                 <div class="article-number" aria-hidden="true">${article.number}</div>
@@ -242,7 +255,6 @@ function renderFeaturedArticles() {
                 </div>
             `;
             
-            // Вставляем после контейнера с заголовком
             titleContainer.parentNode.insertBefore(articleElement, titleContainer.nextSibling);
         });
     }
@@ -258,6 +270,25 @@ function renderFeaturedArticles() {
         if (circleSubtitle) circleSubtitle.textContent = circle.subtitle;
         if (circleFooter) circleFooter.textContent = circle.footer;
     }
+}
+
+function createArticleDetailHTML() {
+    const articleDetail = document.getElementById('article-detail');
+    if (!articleDetail) return;
+    
+    articleDetail.innerHTML = `
+        <div class="article-share-container">
+            <button class="share-button" aria-label="Поделиться статьей">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                    <polyline points="16 6 12 2 8 6"></polyline>
+                    <line x1="12" y1="2" x2="12" y2="15"></line>
+                </svg>
+                Поделиться
+            </button>
+        </div>
+        <div class="article-content-container"></div>
+    `;
 }
 
 function formatDate(dateString) {
@@ -368,6 +399,80 @@ function disableDesktopLayout() {
     });
 }
 
+// Функция для обновления URL с якорем
+function updateUrlWithHash(articleId) {
+    const newUrl = `${window.location.pathname}${window.location.search}#${articleId}`;
+    window.history.pushState({ articleId }, '', newUrl);
+}
+
+// Функция для инициализации кнопки "поделиться"
+function initShareButton(articleId, articleTitle) {
+    const shareButton = document.querySelector('.share-button');
+    if (!shareButton) return;
+    
+    shareButton.onclick = () => {
+        const shareUrl = `${window.location.origin}${window.location.pathname}#${articleId}`;
+        
+        // Проверяем поддержку Web Share API
+        if (navigator.share) {
+            navigator.share({
+                title: articleTitle,
+                url: shareUrl
+            }).catch(err => {
+                console.log('Error sharing:', err);
+                copyToClipboard(shareUrl);
+            });
+        } else {
+            // Fallback: копирование в буфер обмена
+            copyToClipboard(shareUrl);
+        }
+    };
+}
+
+// Функция для копирования в буфер обмена
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        showNotification('Ссылка скопирована в буфер обмена!');
+    }).catch(err => {
+        console.error('Failed to copy:', err);
+        // Fallback для старых браузеров
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            showNotification('Ссылка скопирована в буфер обмена!');
+        } catch (err) {
+            showNotification('Не удалось скопировать ссылку');
+        }
+        document.body.removeChild(textArea);
+    });
+}
+
+// Функция для показа уведомления
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: var(--dark-bg);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 6px;
+        z-index: 10000;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        document.body.removeChild(notification);
+    }, 3000);
+}
+
 function showArticle(articleId) {
     const article = contentManager.getArticle(articleId);
     if (!article) {
@@ -378,25 +483,35 @@ function showArticle(articleId) {
     appState.currentArticle = articleId;
     appState.scrollPosition = window.scrollY || document.documentElement.scrollTop;
     
+    // Создаем HTML структуру если ее нет
+    if (!document.querySelector('.article-share-container')) {
+        createArticleDetailHTML();
+    }
+    
+    // Обновляем URL с якорем
+    updateUrlWithHash(articleId);
+    
+    // Заполняем контент
+    const contentContainer = document.querySelector('.article-content-container');
+    if (contentContainer) {
+        contentContainer.innerHTML = generateArticleHTML(article);
+    }
+    
     if (appState.isDesktop) {
         domElements.articleDetail.style.display = 'block';
-        domElements.articleDetail.innerHTML = generateArticleHTML(article);
-        
         domElements.blogSections.forEach(section => {
             section.style.display = 'none';
         });
     } else {
         document.body.classList.add('article-open');
         document.body.style.overflow = 'hidden';
-        
         domElements.articleDetail.style.display = 'block';
         domElements.articleDetail.classList.add('visible');
-        domElements.articleDetail.innerHTML = generateArticleHTML(article);
-        
         domElements.articleDetail.scrollTop = 0;
     }
     
     initInteractiveElements();
+    initShareButton(articleId, article.data.title);
 }
 
 function generateArticleHTML(article) {
@@ -420,8 +535,8 @@ function generateArticleHTML(article) {
                     </div>
                     
                     <div style="line-height: 1.7; font-size: 1.1rem;">
-		    	<span>${article.data.excerpt}</span>
-                        <span>${article.data.content}</span>
+                        ${article.data.excerpt}
+                        ${article.data.content || ''}
                     </div>
                 </div>
             `;
@@ -468,6 +583,11 @@ function generateArticleHTML(article) {
 }
 
 function showArticleList() {
+    // Убираем якорь из URL
+    if (window.location.hash) {
+        window.history.replaceState({}, '', window.location.pathname + window.location.search);
+    }
+    
     if (appState.isDesktop) {
         // Desktop behavior - show all sections
         domElements.blogSections.forEach(section => {
@@ -569,9 +689,9 @@ function initInteractiveElements() {
             e.preventDefault();
             e.stopPropagation();
             
-            // Извлекаем ID статьи из data-атрибута
-            const articleId = link.getAttribute('data-article-id');
-            if (articleId) {
+            const href = link.getAttribute('href');
+            if (href && href.startsWith('#')) {
+                const articleId = href.substring(1);
                 showArticle(articleId);
             }
         });
@@ -601,15 +721,31 @@ function debounce(func, wait) {
     };
 }
 
+// Обработчик для загрузки страницы с якорем
+function handleHashOnLoad() {
+    if (window.location.hash) {
+        const articleId = window.location.hash.substring(1);
+        const article = contentManager.getArticle(articleId);
+        if (article) {
+            // Небольшая задержка для полной загрузки контента
+            setTimeout(() => {
+                showArticle(articleId);
+            }, 100);
+        }
+    }
+}
+
 async function init() {
     // Загружаем контент через менеджер
     const success = await contentManager.load();
     
     if (!success) {
-        // Показываем сообщение об ошибке или используем fallback
         console.error('Не удалось загрузить контент');
         return;
     }
+    
+    // Создаем HTML структуру для деталей статьи
+    createArticleDetailHTML();
     
     // Рендерим контент
     renderExpertOpinions();
@@ -628,6 +764,21 @@ async function init() {
     
     // Добавляем обработчик изменения размера
     window.addEventListener('resize', debounce(handleResize, 250));
+    
+    // Обрабатываем якорь при загрузке
+    handleHashOnLoad();
+    
+    // Обрабатываем изменения hash
+    window.addEventListener('hashchange', () => {
+        if (window.location.hash) {
+            const articleId = window.location.hash.substring(1);
+            if (contentManager.getArticle(articleId)) {
+                showArticle(articleId);
+            }
+        } else if (appState.currentArticle) {
+            showArticleList();
+        }
+    });
 }
 
 // Initialize when DOM is ready

@@ -74,10 +74,9 @@ a {
     display: inline-block;
     margin-bottom: 1.5rem;
     padding: 0.5rem 0.5rem;
-    opacity: 50%;
     background: var(--dark-bg);
     color: white;
-    border-radius: 4px;
+    border-radius: 6px;
     text-decoration: none;
     font-family: 'Inter', sans-serif;
     font-weight: 500;
@@ -86,7 +85,7 @@ a {
 
 .back-button:hover {
     background: #2a2e35;
-    opacity: 1;
+    opacity: 90%;
 }
 
 /* Article Content Styles */
@@ -1159,5 +1158,65 @@ img[loading="lazy"] {
     
     .circle-footer {
         font-size: 20px;
+    }
+}
+
+/* Share Button Styles */
+.article-share-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9001;
+}
+
+.share-button {
+    background: var(--dark-bg);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.3s ease;
+}
+
+.share-button:hover {
+    background: #2a2e35;
+}
+
+.share-button svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Mobile adjustments for share button */
+@media screen and (max-width: 1199px) {
+    .article-share-container {
+        top: 15px;
+        right: 15px;
+    }
+    
+    .share-button {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+}
+
+/* Article content container */
+.article-content-container {
+    max-width: 800px;
+    margin: 60px auto 0;
+    padding: 20px;
+}
+
+@media screen and (max-width: 767px) {
+    .article-content-container {
+        margin-top: 50px;
+        padding: 15px;
     }
 }
