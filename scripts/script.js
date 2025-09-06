@@ -34,7 +34,7 @@ class ContentManager {
         if (this.isLoaded) return true;
         
         try {
-            const response = await fetch('https://raw.githubusercontent.com/vifirsanova/hse-blog/refs/heads/main/assets/preview.json');
+            const response = await fetch('https://raw.githubusercontent.com/vifirsanova/hse-blog/refs/heads/content-refinements/assets/preview.json');
             if (!response.ok) throw new Error('Failed to load content');
             
             this.content = await response.json();
@@ -100,6 +100,32 @@ class ContentManager {
                 }
             });
         }
+        
+        // Обрабатываем открытые вопросы (если есть)
+        if (this.content.openQuestions) {
+            // Генерируем ID для каждого вопроса
+            this.content.openQuestions.questions.forEach((question, index) => {
+                const id = this.generateArticleId(`question-${index}`);
+                if (!this.articles.has(id)) {
+                    this.articles.set(id, {
+                        type: 'question',
+                        data: {
+                            id: id,
+                            title: `Вопрос: ${question.substring(0, 50)}...`,
+                            question: question,
+                            content: `<div style="max-width:800px; margin:0 auto; padding:20px;">
+                                <a href="#" class="back-button">← Назад к статьям</a>
+                                <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 2rem; margin-bottom: 1.5rem;">${question}</h2>
+                                <div style="line-height: 1.7; font-size: 1.1rem;">
+                                    <p>Этот вопрос является частью нашего банка открытых вопросов для междисциплинарного обсуждения.</p>
+                                    <p>Присоединяйтесь к дискуссии на наших встречах или напишите нам свои мысли по этому вопросу.</p>
+                                </div>
+                            </div>`
+                        }
+                    });
+                }
+            });
+        }
     }
 
     getArticle(id) {
@@ -159,6 +185,19 @@ function renderExpertOpinions() {
             `;
             opinionsGrid.appendChild(opinionCard);
         });
+    }
+
+    // Добавляем банк открытых вопросов
+    const openQuestions = contentManager.content.openQuestions;
+    if (openQuestions && openQuestions.html) {
+        const stickyContent = domElements.stickyHeader.querySelector('.sticky-content');
+        if (stickyContent) {
+            // Вставляем банк вопросов после описания
+            const description = stickyContent.querySelector('p');
+            if (description && !stickyContent.querySelector('.open-questions')) {
+                description.insertAdjacentHTML('afterend', openQuestions.html);
+            }
+        }
     }
 }
 
@@ -764,7 +803,18 @@ async function init() {
     
     // Добавляем обработчик изменения размера
     window.addEventListener('resize', debounce(handleResize, 250));
-    
+
+    // Помечаем активный пункт меню
+    const currentPage = window.location.pathname.split('/').pop();
+    document.querySelectorAll('.blog-menu').forEach(menuItem => {
+        const href = menuItem.getAttribute('href');
+        if (href === currentPage || (currentPage === '' && href === 'index.html')) {
+            menuItem.classList.add('active');
+        } else {
+            menuItem.classList.remove('active');
+        }
+    });
+
     // Обрабатываем якорь при загрузке
     handleHashOnLoad();
     

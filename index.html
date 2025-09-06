@@ -11,10 +11,9 @@
     <!-- Preload critical resources -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,500&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" as="style">
     <link rel="preload" href="styles.css" as="style">
-    
     <!-- CSS -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,500&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="./styles/styles.css">
     
     <!-- Favicons -->
     <link rel="icon" href="/favicon.ico" sizes="any">
@@ -26,9 +25,9 @@
     <div class="blog-container">
         <!-- Menu Section -->
         <nav class="blog-menu-section desktop-only" aria-label="Основное меню">
-            <a href="https://vifirsanova.github.io/tutorial/" class="blog-menu">Туториалы</a>
-            <a href="#" class="blog-menu">Блог</a>
-            <a href="#" class="blog-menu">Контакты</a>
+	    <!-- <a href="https://vifirsanova.github.io/tutorial/" class="blog-menu">Туториалы</a> -->
+            <a href="index.html" class="blog-menu">Блог</a>
+            <a href="pages/contacts.html" class="blog-menu">Контакты</a>
             <a href="#" class="blog-menu subscribe">Подписаться</a>
         </nav>
 
@@ -36,38 +35,8 @@
         <header class="sticky-header">
             <div class="sticky-content">
                 <h1 class="blog-big-title">LAW DESIGN + ROBOTS</h1>
-
-                <div class="feedback-section">
-                    <h3 class="feedback-title">Присоединиться к проекту</h3>
-                    
-                    <div class="feedback-content">
-                        <p><strong>Проект LAW DESIGN + ROBOTS будет рад обратной связи и предложениям от студентов и преподавателей Вышки.</strong> Если вы хотите предложить материал для публикации или организовать мероприятие в рамках LDR, то вы можете рассказать о своей идее главным редакторам.</p>
-                        
-                        <p>Вы можете написать любому из редакторов, всем редакторам сразу или же одному из редакторов в зависимости от темы:</p>
-                        
-                        <div class="contact-cards-container">
-                            <div class="editor-contacts">
-                                <div class="contact-card black-card">
-                                    <div class="contact-header">PRO ROBOTS</div>
-                                    <div class="contact-name">Виктория Фирсанова</div>
-                                    <div class="editor-title">Преподаватель: НИУ ВШЭ в Санкт-Петербурге</div>
-                                    <a href="mailto:v.firsanova@hse.ru" class="contact-email">vfirsanova@hse.ru</a>
-                                </div>
-                                
-                                <div class="contact-card black-card">
-                                    <div class="contact-header">PRO LAW</div>
-                                    <div class="contact-name">Мариам Ароян</div>
-                                    <div class="editor-title">Приглашенный преподаватель: НИУ ВШЭ в Санкт-Петербурге</div>
-                                    <a href="mailto:m.aroian@hse.ru" class="contact-email">m.aroian@hse.ru</a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <p class="feedback-note"><strong>Решения о публикации</strong> предложенного материала или проведении совместных мероприятий зависят от контент-стратегии проекта в конкретное время, поэтому мы очень просим вас отнестись к этому вопросу с пониманием и не расстраиваться, если вашу статью не взяли в блог.</p>
-                    </div>
-                </div>
-            </div>
-
+		<p style="max-width:740px; padding:8px 0 14px 0; margin:0 0 12px 0;color:#555;font-style:italic;font-family:Georgia, 'Times New Roman', Times, serif;">Mеждисциплинарная рабочая среда и виртуальноe пространства для обмена мнениями и экспертизой. Здесь встретились AI, творчество и право интеллектуальной собственности.</p>
+	    </div>	
             <!-- Expert Opinions Section - Content will be loaded dynamically -->
             <section class="expert-opinions" aria-labelledby="expert-opinions-heading">
                 <div class="section-header">
@@ -113,6 +82,6 @@
         <div id="article-detail" style="display: none;"></div>
     </div>
 
-    <script src="script.js" defer></script>
+    <script src="scripts/script.js" defer></script>
 </body>
 </html>

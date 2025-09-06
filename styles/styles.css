@@ -136,7 +136,7 @@ a {
     width: 100%;
     min-height: 100vh;
     border-bottom: 1px solid var(--border-color);
-    padding: 40px 20px;
+    padding: 20px 10px;
     position: static;
 }
 
@@ -1220,3 +1220,5 @@ img[loading="lazy"] {
         padding: 15px;
     }
 }
+
+

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="Контакты проекта LAW DESIGN + ROBOTS">
+    <meta name="keywords" content="контакты, ИИ, искусственный интеллект, право, дизайн, LDR">
+    <meta name="theme-color" content="#121418">
+    <title>Контакты | LAW DESIGN + ROBOTS</title>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,500&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="../styles/styles.css">
+    
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+</head>
+<body>
+    <div class="blog-container">
+
+
+        <!-- Main Content -->
+            <!-- Article Detail View for Contacts -->
+            <div id="article-detail" class="visible">
+                <div class="article-share-container">
+                    <button class="share-button" aria-label="Поделиться контактами">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                            <polyline points="16 6 12 2 8 6"></polyline>
+                            <line x1="12" y1="2" x2="12" y2="15"></line>
+                        </svg>
+                        Поделиться
+                    </button>
+                </div>
+                
+                <div class="article-content-container">
+                    <a href="../index.html" class="back-button">← Назад к блогу</a>
+                    
+                    <h2>Контакты проекта</h2>
+                    <time datetime="2024-01-01" style="display: block; margin: 1rem 0; color: #666; font-size: 0.9rem;">LAW DESIGN + ROBOTS</time>
+                    
+                    <div style="line-height: 1.7; font-size: 1.1rem; margin-top: 2rem;">
+                        <p><strong>Проект LAW DESIGN + ROBOTS будет рад обратной связи и предложениям от студентов и преподавателей Вышки.</strong> Если вы хотите предложить материал для публикации или организовать мероприятие в рамках LDR, то вы можете рассказать о своей идее главным редакторам.</p>
+                        
+                        <p>Вы можете написать любому из редакторов, всем редакторам сразу или же одному из редакторов в зависимости от темы:</p>
+                        
+                        <div class="contact-cards-container" style="margin: 2rem 0;">
+                            <div class="editor-contacts">
+                                <div class="contact-card black-card">
+                                    <div class="contact-header">PRO ROBOTS</div>
+                                    <div class="contact-name">Виктория Фирсанова</div>
+                                    <div class="editor-title">Преподаватель: НИУ ВШЭ в Санкт-Петербурге</div>
+                                    <a href="mailto:v.firsanova@hse.ru" class="contact-email">v.firsanova@hse.ru</a>
+                                </div>
+                                
+                                <div class="contact-card black-card">
+                                    <div class="contact-header">PRO LAW</div>
+                                    <div class="contact-name">Мариам Ароян</div>
+                                    <div class="editor-title">Приглашенный преподаватель: НИУ ВШЭ в Санкт-Петербурге</div>
+                                    <a href="mailto:m.aroian@hse.ru" class="contact-email">m.aroian@hse.ru</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <p class="feedback-note"><strong>Решения о публикации</strong> предложенного материала или проведении совместных мероприятий зависят от контент-стратегии проекта в конкретное время, поэтому мы очень просим вас отнестись к этому вопросу с пониманием и не расстраиваться, если вашу статью не взяли в блог.</p>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <script src="scripts/script.js"></script>
+    <script>
+        // Инициализация кнопки "Поделиться" для страницы контактов
+        document.addEventListener('DOMContentLoaded', function() {
+            const shareButton = document.querySelector('.share-button');
+            if (shareButton) {
+                shareButton.addEventListener('click', function() {
+                    const shareUrl = window.location.href;
+                    
+                    if (navigator.share) {
+                        navigator.share({
+                            title: 'Контакты проекта LAW DESIGN + ROBOTS',
+                            url: shareUrl
+                        });
+                    } else {
+                        navigator.clipboard.writeText(shareUrl).then(() => {
+                            alert('Ссылка скопирована в буфер обмена!');
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
