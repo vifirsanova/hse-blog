@@ -186,7 +186,7 @@ function renderExpertOpinions() {
             opinionsGrid.appendChild(opinionCard);
         });
     }
-
+    
     // Добавляем банк открытых вопросов
     const openQuestions = contentManager.content.openQuestions;
     if (openQuestions && openQuestions.html) {
@@ -196,6 +196,8 @@ function renderExpertOpinions() {
             const description = stickyContent.querySelector('p');
             if (description && !stickyContent.querySelector('.open-questions')) {
                 description.insertAdjacentHTML('afterend', openQuestions.html);
+                // Инициализируем обработчики для вопросов
+                setTimeout(initQuestionHandlers, 100);
             }
         }
     }
@@ -772,6 +774,30 @@ function handleHashOnLoad() {
             }, 100);
         }
     }
+}
+
+// Функция для переключения деталей вопросов
+function toggleQuestionDetails(id) {
+    const element = document.getElementById(id);
+    if (element) {
+        if (element.style.display === 'none' || !element.style.display) {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+}
+
+// Инициализация обработчиков для вопросов
+function initQuestionHandlers() {
+    // Добавляем обработчики для всех вопросов
+    document.querySelectorAll('[onclick^=\"toggleQuestionDetails\"]').forEach(element => {
+        element.style.cursor = 'pointer';
+        element.addEventListener('click', (e) => {
+            const id = e.target.getAttribute('onclick').match(/'([^']+)'/)[1];
+            toggleQuestionDetails(id);
+        });
+    });
 }
 
 async function init() {
