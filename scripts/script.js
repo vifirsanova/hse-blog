@@ -34,7 +34,7 @@ class ContentManager {
         if (this.isLoaded) return true;
         
         try {
-            const response = await fetch('https://raw.githubusercontent.com/vifirsanova/hse-blog/refs/heads/content-refinements/assets/preview.json');
+            const response = await fetch('https://raw.githubusercontent.com/vifirsanova/hse-blog/refs/heads/main/assets/preview.json');
             if (!response.ok) throw new Error('Failed to load content');
             
             this.content = await response.json();
